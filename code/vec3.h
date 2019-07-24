@@ -63,9 +63,13 @@ class vec3
         // --------------------------------------------------------------------------------
         inline float squared_length() const {return e[0]*e[0] + e[1]*e[1] + e[2]*e[2];}
 
-        // 
+        // Calculates the unit vector, see: https://en.wikipedia.org/wiki/Unit_vector.
         // --------------------------------------------------------------------------------
-        inline void make_unit_vector();
+        inline void make_unit_vector()
+        {
+            float k = 1.0 / sqrt(e[0]*e[0] + e[1]*e[1] + e[2]*e[2]);
+            e[0] *= k; e[1] *= k; e[2] *= k;
+        }
 };
 
 inline std::istream& operator>>(std::istream &is, vec3 &t) {
@@ -76,11 +80,6 @@ inline std::istream& operator>>(std::istream &is, vec3 &t) {
 inline std::ostream& operator<<(std::ostream &os, const vec3 &t) {
     os << t.e[0] << " " << t.e[1] << " " << t.e[2];
     return os;
-}
-
-inline void vec3::make_unit_vector() {
-    float k = 1.0 / sqrt(e[0]*e[0] + e[1]*e[1] + e[2]*e[2]);
-    e[0] *= k; e[1] *= k; e[2] *= k;
 }
 
 inline vec3 operator+(const vec3 &v1, const vec3 &v2) {
