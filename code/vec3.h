@@ -1,8 +1,7 @@
 
-// These are not nessessary, probably? 
+// These are not nessessary, I think? 
 #include <math.h>
 #include <stdlib.h>
-#include <iostream>
 
 class vec3 {
     
