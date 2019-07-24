@@ -1,7 +1,11 @@
-
-// These are not nessessary, I think? 
-#include <math.h>
+// This one is not nessessary, I think? 
 #include <stdlib.h>
+
+// <math.h> is needed for the sqrt() function. <iostream> is nessessary to be able to 
+// define the behaviour for the '<<' and '>>' operators.
+// ----------------------------------------------------------------------------------------
+#include <iostream>
+#include <math.h>
 
 class vec3 {
     
