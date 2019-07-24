@@ -1,0 +1,27 @@
+# Folders #
+###########
+.vscode/
+images/
+models/
+quickscripts/
+
+# Compiled source #
+###################
+*.exe
+
+# Packages #
+############
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Created images #
+##################
+*.png
+*.jpg
+*.ppm
