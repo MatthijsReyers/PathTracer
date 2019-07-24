@@ -1,5 +1,7 @@
 #ifndef RAYH
 #define RAYH
+
+
 #include "vec3.h"
 
 class ray
@@ -12,6 +14,7 @@ class ray
 
         // 
         // --------------------------------------------------------------------------------
+        ray() {};
         ray(const vec3& vecA, const vec3& vecB) {A = vecA; B = vecB;}
 
         // 

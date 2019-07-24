@@ -1,5 +1,5 @@
-#ifndef VEC3
-#define VEC3
+#ifndef VEC3H
+#define VEC3H
 
 // This one is not nessessary, I think? 
 #include <stdlib.h>
@@ -19,6 +19,7 @@ class vec3
 
         // 
         // --------------------------------------------------------------------------------
+        vec3() {};
         vec3(float e0, float e1, float e2) {e[0] = e0; e[1] = e1; e[2] = e2;}
 
         // Defining X, Y, and Z. As well as R, G, and B. Because We'll use this vector 
