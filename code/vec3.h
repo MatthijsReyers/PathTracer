@@ -1,14 +1,17 @@
+#ifndef VEC3
+#define VEC3
+
 // This one is not nessessary, I think? 
 #include <stdlib.h>
 
 // <math.h> is needed for the sqrt() function. <iostream> is nessessary to be able to 
-// define the behaviour for the '<<' and '>>' operators.
+// define the vec3 class's behaviour for the '<<' and '>>' operators.
 // ----------------------------------------------------------------------------------------
 #include <iostream>
 #include <math.h>
 
-class vec3 {
-    
+class vec3 
+{
     public:
         // Array of floats that contains the magnitudes of the vector.
         // --------------------------------------------------------------------------------
@@ -160,6 +163,9 @@ inline vec3& vec3::operator/=(const float t) {
     return *this;
 }
 
+// See: https://en.wikipedia.org/wiki/Unit_vector when confused.
 inline vec3 unit_vector(vec3 v) {
     return v / v.length();
 }
+
+#endif

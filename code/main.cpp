@@ -1,12 +1,11 @@
 #include <iostream>
 #include <fstream>
 
-#include <math.h>
-#include <stdlib.h>
+#include "vec3.h"
 
 int main(int argv, char** argc)
 {
-    const char* OutFileName = "/images/out.ppm";
+    const char* OutFileName = "out.ppm";
     std::ofstream OutFile;
     OutFile.open(OutFileName);
 
@@ -18,13 +17,15 @@ int main(int argv, char** argc)
     {
         for (int w = 0; w < nx; w++)
         {
-            float r = float(h) / float(ny);
-            float g = float(h) / float(ny);
-            float b = float(h) / float(ny);
+            vec3 col(
+                float(h) / float(ny), 
+                float(w) / float(ny), 
+                float(w) / float(ny)
+            );
 
-            int ir = int(255.99 * r);
-            int ig = int(255.99 * g);
-            int ib = int(255.99 * b);
+            int ir = int(255.99 * col.r);
+            int ig = int(255.99 * col.g);
+            int ib = int(255.99 * col.b);
 
             OutFile << ir << " " << ig << " " << ib << "\n";
         }
