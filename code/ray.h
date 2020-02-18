@@ -1,7 +1,4 @@
-#ifndef RAYH
-#define RAYH
-
-
+#pragma once
 #include "vec3.h"
 
 class ray
@@ -24,5 +21,3 @@ class ray
         vec3 point_at_parameter(float t) const {return A + t*B;}
 
 };
-
-#endif
