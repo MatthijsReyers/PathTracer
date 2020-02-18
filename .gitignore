@@ -8,6 +8,7 @@ quickscripts/
 # Compiled source #
 ###################
 *.exe
+./pathtracer
 
 # Packages #
 ############
