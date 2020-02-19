@@ -1,9 +1,9 @@
 #include <iostream>
-#include <fstream>
 
 #include "vec3.h"
 #include "ray.h"
 #include "sphere.h"
+#include "image.h"
 
 #define HEIGHT 400
 #define WIDTH 800
@@ -19,16 +19,8 @@ vec3 colorSky(const ray& r)
 
 int main(int argv, char** argc)
 {
-	const char* OutFileName = "out.ppm";
-	std::ofstream OutFile;
-	OutFile.open(OutFileName);
-	OutFile << "P3\n" << WIDTH << " " << HEIGHT << "\n255\n";
-
 	float renderPlaneHeight = (float(HEIGHT)/float(WIDTH)) * float(RENDERPLANE_SCALE);
 	float renderPlaneWidth = 1.0 * float(RENDERPLANE_SCALE);
-
-	std::cout << "renderPlaneWidth: " << renderPlaneWidth << std::endl;
-	std::cout << "renderPlaneHeight: " << renderPlaneHeight << std::endl;
 
 	vec3 origin = 		vec3(0.0, 0.0, 0.0);
 	vec3 horizonal = 	vec3(renderPlaneWidth, 0.0, 0.0);
@@ -54,10 +46,7 @@ int main(int argv, char** argc)
 			int ig = int(255.99 * colour.g());
 			int ib = int(255.99 * colour.b());
 
-			OutFile << ir << " " << ig << " " << ib << "\n";
 		}
 	}
-
-	OutFile.close();
 }
 
