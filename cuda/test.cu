@@ -1,14 +1,18 @@
 #include <math.h>
 #include <iostream>
+#include <fstream>
 #include <chrono>
+
+#define DIMENSION 512
 
 // CUDA kernel to add elements of two arrays
 __global__
-void add(int n, float *x, float *y)
+void render(int n, float *x, float *y, float *pixels)
 {
-	for (int i = 0; i < n; i++)
-		for (int a = 0; a < 666; a++)
-			y[i] = std::sqrt(x[i]);
+	x[n] = 500.0;
+	// pixels[n*3+0] = 0.0;
+	// pixels[n*3+1] = 0.5;
+	// pixels[n*3+2] = 1.0;
 }
 
 void time()
@@ -25,28 +29,58 @@ int main(void)
 		return 1;
 	}
 
-	int N = 1 << 16;
-	float *x, *y;
+	int N = 1 << 18;
+	float *x, *y, *pixels;
 
 	cudaMallocManaged(&x, N*sizeof(float));
 	cudaMallocManaged(&y, N*sizeof(float));
+	cudaMallocManaged(&pixels, 3*N*sizeof(float));
+
+	error  = cudaGetLastError();
+	if (error != 0) {
+		std::cout << "ERROR: this happened: " << cudaGetErrorString(error) << std::endl;
+		return 1;
+	}
 
 	for (int i = 0; i < N; i++) {
-		x[i] = 908397534.0f;
-		y[i] = 0.0f;
+		x[i] = 2.0f;
+		y[i] = 1.0f;
+		pixels[i] = 0.0f;
 	}
 
 	time();
 
-	add<<<1, 1>>>(N, x, y);
+	render<<<1, 1>>>(N, x, y, pixels);
 
 	cudaDeviceSynchronize();
 
-	for (int i = 0; i < N; i++)
-		std::cout << y[i] << std::endl;
-
 	time();
 
+	error  = cudaGetLastError();
+	if (error != 0) {
+		std::cout << "ERROR: this happened: " << cudaGetErrorString(error) << std::endl;
+		return 1;
+	}
+
+	for (int i = 0; i < N; i++) {
+		std::cout << x[i] << " " << y[i] << std::endl;
+	}
+
+	// std::ofstream file;
+	// file.open("out.ppm");
+	// file << "P3\n" << DIMENSION << " " << DIMENSION << "\n255\n";
+	// std::cout << "writing file\n";
+    // for (int i = DIMENSION*DIMENSION -1; i > 0; i--)
+    // {
+    //     int red = int(255.99 * pixels[i*3+0]);
+    //     int green = int(255.99 * pixels[i*3+1]);
+    //     int blue = int(255.99 * pixels[i*3+2]);
+
+    //     file << red << " " << green << " " << blue << "\n";
+    // }
+	// file.close();
+	
 	cudaFree(x);
 	cudaFree(y);
+	cudaFree(pixels);
 }
