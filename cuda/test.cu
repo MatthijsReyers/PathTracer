@@ -25,7 +25,7 @@ int main(void)
 		return 1;
 	}
 
-	int N = 16 << 4;
+	int N = 1 << 16;
 	float *x, *y;
 
 	cudaMallocManaged(&x, N*sizeof(float));
@@ -38,12 +38,12 @@ int main(void)
 
 	time();
 
-	// for (int i = 0; i < N; i++)
-	// 	add(i, x, y);
-
 	add<<<1, 1>>>(N, x, y);
 
 	cudaDeviceSynchronize();
+
+	for (int i = 0; i < N; i++)
+		std::cout << y[i] << std::endl;
 
 	time();
 

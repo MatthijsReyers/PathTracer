@@ -1,69 +1,50 @@
 #include <iostream>
+#include <fstream>
+#include <cstdlib>
 
 #include "vec3.h"
-#include "ray.h"
-#include "sphere.h"
-#include "image.h"
+// #include "ray.h"
+// #include "sphere.h"
+// #include "hittable.h"
+// #include "hitable_list.h"
+// #include "camera.h"
+// #include "image.h"
 
-#define WIDTH 800
+#define WIDTH 600
 #define HEIGHT 400
+#define SAMPLES 50
 #define CAMERA_DISTANCE -1
-#define RENDERPLANE_SCALE 2
+#define RENDERPLANE_SCALE 4
 
-vec3 colorSky(const ray& r)
+__global__
+void renderPixel(int n, vec3 *pixels)
 {
-	vec3 unitDirection = unit_vector(r.direction());
-	float t = 0.5 * (unitDirection.y() + 1.0);
-	return (1.0-t) * vec3(1.0,1.0,1.0) + t*vec3(0.5, 0.7, 1.0);
+	pixels[n] = vec3(1.0, 0, 0);
 }
 
 int main(int argv, char** argc)
 {
-	std::cout << sizeof(vec3) << std::endl;
-	std::cout << sizeof(float) << std::endl;
+	vec3 *pixels;
+	cudaMallocManaged(&pixels, WIDTH*HEIGHT*sizeof(vec3));
 
-	image output(WIDTH, HEIGHT);
+	renderPixel<<<1, 1>>>( int(WIDTH*HEIGHT), pixels);
 
-	float renderPlaneHeight = (float(HEIGHT)/float(WIDTH)) * float(RENDERPLANE_SCALE);
-	float renderPlaneWidth = 1.0 * float(RENDERPLANE_SCALE);
+	cudaDeviceSynchronize();
 
-	vec3 origin = 		vec3(0.0, 0.0, 0.0);
-	vec3 horizonal = 	vec3(renderPlaneWidth, 0.0, 0.0);
-	vec3 vertical = 	vec3(0.0, renderPlaneHeight, 0.0);
-	vec3 bottomLeft = 	vec3(renderPlaneWidth / -2.0, renderPlaneHeight / -2.0, float(CAMERA_DISTANCE));
+	std::ofstream file;
+	file.open("out.ppm");
+	file << "P3\n" << WIDTH << " " << HEIGHT << "\n255\n";
 
-	sphere s1(vec3(0,0,-2), 0.5);
-	vec3 x;
+    for (int i = WIDTH*HEIGHT; i > 0; i--)
+    {
+        vec3 pixel = pixels[i];
 
-	for (int h = 0; h < HEIGHT; h++)
-	{
-		for (int w = 0; w < WIDTH; w++)
-		{
-			float u = float(w) / float(WIDTH);
-			float v = float(h) / float(HEIGHT);
+        int red = int(255.99 * pixel.r());
+        int green = int(255.99 * pixel.g());
+        int blue = int(255.99 * pixel.b());
 
-			ray r(origin, bottomLeft + u*horizonal + v*vertical);
+        file << red << " " << green << " " << blue << "\n";
+    }
 
-			if (s1.hit(r)) x = vec3(1.0, 0, 0);
-			else x = colorSky(r);
-
-
-			float red = 0.0;
-			if (w > WIDTH/2)
-				red = 1.0;
-
-			float green = 0.0;
-			if (w == h)
-				green = 1.0;
-
-			float blue = u;
-
-			output.setPixel(w, h, red, green, blue);
-			// output.setPixel(w, h, x.r(),x.g(),x.b());
-		}
-	}
-
-	output.write("out.ppm");
-	output.close();
+    file.close();
 }
-

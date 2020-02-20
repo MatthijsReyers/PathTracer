@@ -15,7 +15,10 @@ class image
         image(int w, int h);
 
         void close();
+        __host__ __device__
         void setPixel(int w, int h, float r, float g, float b);
+        __host__ __device__
+        void setPixel(int n, float r, float g, float b);
         void write(const char* url);
 };
 
@@ -34,7 +37,13 @@ void image::close()
 
 void image::setPixel(int w, int h, float r, float g, float b)
 {
-    pixels[w + (h*(w+1))] = vec3(r,g,b);
+    pixels[h*width + w] = vec3(r,g,b);
+}
+
+__host__ __device__
+void image::setPixel(int n, float r, float g, float b)
+{
+    pixels[n] = vec3(r,g,b);
 }
 
 void image::write(const char* url)
@@ -43,17 +52,15 @@ void image::write(const char* url)
 	file.open(url);
 	file << "P3\n" << width << " " << height << "\n255\n";
 
-	for (int h = height-1; h >= 0; h--) {
-		for (int w = 0; w < width; w++) {
+    for (int i = width*height; i > 0; i--)
+    {
+        vec3 pixel = pixels[i];
 
-            vec3 pixel = pixels[w + (h*(w+1))];
+        int red = int(255.99 * pixel.r());
+        int green = int(255.99 * pixel.g());
+        int blue = int(255.99 * pixel.b());
 
-            int red = int(255.99 * pixel.r());
-            int green = int(255.99 * pixel.g());
-            int blue = int(255.99 * pixel.b());
-
-            file << red << " " << green << " " << blue << "\n";
-        }
+        file << red << " " << green << " " << blue << "\n";
     }
 
     file.close();
